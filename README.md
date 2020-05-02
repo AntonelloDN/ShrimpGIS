@@ -1,10 +1,14 @@
 # ShrimpGIS
 A basic plugin for Grasshopper to read and write shapefile (GPL)
 ![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/ShrimpGIS_milan_top.png)
+Easy to use!
+![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/shrimp_gis.gif)
 ## Installation:
 1. Download ShrimpGIS.
 2. Check if downloaded .zip file has been blocked: right click on it, and choose Properties. If there is an Unblock button click on it, otherwise it is OK. Unzip it.
 3. Follow 'README.txt' instructions.
+## Requirements:
+* Rhino 6
 ## Features:
 * Transformation of points, surface/breps, curves, meshes into ESRI shapefile entities.
 * Discretization for curves and surface/breps.
