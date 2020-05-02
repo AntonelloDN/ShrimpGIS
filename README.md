@@ -16,7 +16,7 @@ A basic plugin for Grasshopper to read and write shapefile.
 * Transformation of ESRI shapefile entities into points, surface/breps, curves.
 * Extraction of fields.
 ## Limits v.1.0.0:
-* Rhino document have to be in meter
+* Rhino document has to be in meter
 * Only WGS84 (EPSG:4326) reference system is supported. I suggest you use a GIS software for reprojection (e.g. [QGIS](https://www.qgis.org/en/site/)).
 * Shapefile read component supports following GIS types:
   * POINT
