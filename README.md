@@ -26,7 +26,7 @@ A basic plugin for Grasshopper to read and write shapefile.
   * POLYLINEZ (imported in GH without z values)
   * POLYGONZ (imported in GH without z values)
 ## Videos:
-:construction:
+[Showcase](https://youtu.be/UY8ezRylcj4)
 ## Contributors(a-z):
 * [Antonello Di Nunzio](https://github.com/AntonelloDN)
 
