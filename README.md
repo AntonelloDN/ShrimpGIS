@@ -10,6 +10,9 @@ A basic plugin for Grasshopper to read and write shapefile.
 3. Follow 'README.txt' instructions.
 ## Requirements:
 * Rhino 6
+## Dependencies:
+* pyshp
+* utm
 ## Features:
 * Transformation of points, surface/breps, curves, meshes into ESRI shapefile entities.
 * Discretization for curves and surface/breps.
