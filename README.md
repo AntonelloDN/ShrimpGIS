@@ -1,5 +1,5 @@
 # ShrimpGIS
-A basic plugin for Grasshopper to read and write shapefile.
+A basic plugin for Grasshopper to read and write shapefile. Read more on [Wiki](https://github.com/AntonelloDN/ShrimpGIS/wiki) pages.
 ![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/ShrimpGIS_milan_top.png)
 ### Easy to use!
 ![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/shrimp_gis.gif)
