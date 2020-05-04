@@ -1,4 +1,5 @@
 # ShrimpGIS
+![Logo](https://github.com/AntonelloDN/ShrimpGIS/blob/master/resources/shrimp_gis_logo.png)
 A basic plugin for Grasshopper to read and write shapefile. Read more on [Wiki](https://github.com/AntonelloDN/ShrimpGIS/wiki) pages.
 ![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/ShrimpGIS_milan_top.png)
 ### Easy to use!
@@ -32,6 +33,7 @@ A basic plugin for Grasshopper to read and write shapefile. Read more on [Wiki](
 [Showcase](https://youtu.be/UY8ezRylcj4)
 ## Contributors(a-z):
 * [Antonello Di Nunzio](https://github.com/AntonelloDN)
-
+### Logo source
+Logo is a combination of icons of two designer: [hk12215](https://www.iconfinder.com/hk12215) [strokeicon](https://www.iconfinder.com/strokeicon)
 
 
