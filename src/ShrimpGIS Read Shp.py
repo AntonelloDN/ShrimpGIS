@@ -56,15 +56,17 @@ try:
     sys.path.append(user_path)
     from shrimp_gis import __version__
     from shrimp_gis.io import ShpReader
+    from shrimp_gis import Location
     from shrimp_gis.io import get_rh_point_from_latlon
     ghenv.Component.Message = __version__
 except ImportError as e:
     raise ImportError("\nFailed to import ShrimpGIS: {0}\n\nCheck your 'shrimp_gis' folder in {1}".format(e, os.getenv("APPDATA")))
 ################################################
 
-level = Grasshopper.Kernel.GH_RuntimeMessageLevel.Warning
 
 def main():
+    
+    level = Grasshopper.Kernel.GH_RuntimeMessageLevel.Remark
     
     if not _shp_file:
         print("Connect a compatible shapefile to read.\nThen set run_it to 'True'.")
@@ -78,13 +80,13 @@ def main():
             reader.read_shp_file(_shp_file)
             
             if (reader.level == "partially supported"):
-                level = Grasshopper.Kernel.GH_RuntimeMessageLevel.Remark
                 ghenv.Component.AddRuntimeMessage(level, "{0} file type is partially supported" \
                 " by shp reader components. Z values are not imported.".format(reader.type_name))
             
             if (reader.level == "not supported"):
                 ghenv.Component.AddRuntimeMessage(level, "I am Sorry, {0} file type is not supported" \
                 " by shp reader components.".format(reader.type_name))
+                return [None]*3
             else:
                 gh_points = get_rh_point_from_latlon(reader.points, location)                
                 geometry, missing_geometry = reader.post_processing(gh_points, _shp_file)
