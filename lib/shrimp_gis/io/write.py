@@ -68,7 +68,7 @@ class ShpWriter(object):
 
     #TODO: Add epsg code as input. Call epsg.io API or other to retrieve prj string. Write prj file. It does not work within Rhino for now.
     def write_prj_file(self, folder, file_name):
-        wgs84prjString = "GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137,298.257223563]],PRIMEM[\"Greenwich\",0],UNIT[\"Degree\",0.017453292519943295]]"
+        wgs84prjString = "GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137,298.257223563]],PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.0174532925199433]]"
 
         with open(os.path.join(folder, file_name + ".prj"), "w") as prj_file:
             prj_file.write(wgs84prjString)
