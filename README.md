@@ -16,11 +16,12 @@ You can use it with other plugins, [example](http://htmlpreview.github.com/?http
 * pyshp
 * utm
 ## Features:
-* Transformation of points, surface/breps, curves, meshes into ESRI shapefile entities.
+* Transformation of points, surface/breps, curves, meshes into Esri shapefile entities.
 * Discretization for curves and surface/breps.
-* Transformation of ESRI shapefile entities into points, surface/breps, curves.
+* Transformation of Esri shapefile entities into points, surface/breps, curves.
 * Extraction of fields.
-## Limits v.1.0.0:
+* Write Esri ASCII Raster file.
+## Limits v.1.0.1:
 * Rhino document has to be in meter
 * Only WGS84 (EPSG:4326) reference system is supported. I suggest you use a GIS software for reprojection (e.g. [QGIS](https://www.qgis.org/en/site/)).
 * Shapefile read component supports following GIS types:
