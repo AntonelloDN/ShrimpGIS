@@ -3,6 +3,7 @@
 A basic plugin for Grasshopper to read and write shapefile. Read more on [Wiki](https://github.com/AntonelloDN/ShrimpGIS/wiki) pages.
 You can use it with other plugins, [example](http://htmlpreview.github.com/?https://github.com/AntonelloDN/ShrimpGIS/blob/master/resources/lb_shrimpgis_threejs_qgis/index.html)
 ![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/ShrimpGIS_milan_top.png)
+![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/shrimp_gis_raster.PNG)
 ### Easy to use!
 ![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/shrimp_gis.gif)
 ![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/shrimp_gis_mesh.gif)
