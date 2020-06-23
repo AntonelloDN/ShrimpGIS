@@ -229,6 +229,7 @@ class ShpReader(object):
         geometries, missing_geometry = None, None
 
         if (self.points and self.parts):
+            
             gh_part_points = self.adjust_rh_points(gh_pts)
 
             if (self.type in self.__rhinoType["point"]):

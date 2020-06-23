@@ -1,5 +1,8 @@
 # coding=utf-8
-"""Shpfile writer. It writes shapefile (support for ESRI Shapefiles WGS84 only)."""
+"""
+Shpfile writer. It writes shapefile (support for ESRI Shapefiles WGS84 only).
+Raster writer. It writes asc files and UTM WGS84 prj files.
+"""
 
 from shapefile import TRIANGLE_STRIP
 import shapefile
@@ -7,6 +10,43 @@ import Grasshopper
 import os
 import uuid
 from ..field import Field
+
+
+class AscWriter(object):
+
+    def __init__(self, matrix, pixel_size, xllcenter, yllcenter):
+
+        self.ERSI_ASCII = {
+            "ncols": matrix.num_x,
+            "nrows": matrix.num_y,
+            "xllcenter": xllcenter,
+            "yllcenter": yllcenter,
+            "cellsize": pixel_size,
+            "NODATA_value" : -9999
+        }
+
+        self.matrix = matrix.ASCII_matrix
+    
+    def get_asc(self, folder, name, prj_text):
+
+        full_path_asc = os.path.join(folder, name + ".asc")
+        full_path_prj = os.path.join(folder, name + ".prj")
+
+        with open(full_path_asc, 'w') as f:
+            
+            header = []
+            for k, v in self.ERSI_ASCII.items():
+                header.append(" ".join(map(str, [k, v])))
+            header = "\n".join(header)
+            
+            f.writelines(header)
+            f.writelines("\n")
+            f.writelines(self.matrix)
+        
+        with open(full_path_prj, 'w') as f:
+            f.write(prj_text)
+        
+        return full_path_asc
 
 
 class ShpWriter(object):

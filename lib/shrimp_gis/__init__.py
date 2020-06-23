@@ -13,12 +13,11 @@ import utm
 from field import Field
 from location import Location
 
-
 __author__ = 'antonellodinunzio@gmail.com'
 __copyright__ = 'Antonello Di Nunzio'
 __credits__ = 'Antonello Di Nunzio'
 __license__ = 'GNU GPL V.3+'
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 __maintainer__ = 'Antonello Di Nunzio'
 __email__ = 'antonellodinunzio@gmail.com'
 __status__ = 'release'

@@ -6,9 +6,13 @@ from ..location import Location
 import Rhino
 
 
+def get_utm_detail_from_location(location):
+    return from_latlon(location.latitude, location.longitude)
+
+
 def get_latlon_from_location(pts, location):
 
-    utmx, utmy, zone, letter = from_latlon(location.latitude, location.longitude)
+    utmx, utmy, zone, letter = get_utm_detail_from_location(location)
 
     utm_pts = [(pt[0] + utmx + location.anchor_point.X, pt[1] + utmy + location.anchor_point.Y) for pt in pts]
     latlon_pts = [to_latlon(pt[0], pt[1], zone, letter) for pt in utm_pts]
@@ -18,7 +22,7 @@ def get_latlon_from_location(pts, location):
 
 def get_rh_point_from_latlon(point_group, location):
 
-    utmx, utmy, zone, letter = from_latlon(location.latitude, location.longitude)
+    utmx, utmy, zone, letter = get_utm_detail_from_location(location)
     utm_points = []
     for pts in point_group:
 
