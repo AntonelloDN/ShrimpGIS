@@ -6,7 +6,7 @@ You can use it with other plugins, [example](http://htmlpreview.github.com/?http
 ### Easy to use!
 ![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/shrimp_gis.gif)
 ![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/shrimp_gis_mesh.gif)
-![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/shrimp_gis_raster.PNG)
+![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/shrimp_gis_from_img_to_gis.gif)
 ## Installation:
 1. Download ShrimpGIS. Available on [Food4Rhino](https://www.food4rhino.com/app/shrimpgis)
 2. Check if downloaded .zip file has been blocked: right click on it, and choose Properties. If there is an Unblock button click on it, otherwise it is OK. Unzip it.
