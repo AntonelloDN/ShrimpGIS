@@ -81,6 +81,10 @@ class ShpWriter(object):
         [shp_write.line([[[pt[1], pt[0]] for pt in geo.coordinates]]) for geo in shp_geometry]
 
 
+    def __write_curvez(self, shp_geometry, shp_write):
+        [shp_write.linez([[[pt[1], pt[0], pt[2]] for pt in geo.coordinates]]) for geo in shp_geometry]
+
+
     def __write_polygon(self, shp_geometry, shp_write):
         for geo in shp_geometry:
             chunk = []
@@ -89,10 +93,24 @@ class ShpWriter(object):
             shp_write.poly(chunk)
 
 
+    def __write_polygonz(self, shp_geometry, shp_write):
+        for geo in shp_geometry:
+            chunk = []
+            for pts in geo.coordinates:
+                chunk.append([[pt[1], pt[0], pt[2]] for pt in pts])
+            shp_write.polyz(chunk)
+
+
     def __write_point(self, shp_geometry, shp_write):
         for geo in shp_geometry:
             for pt in geo.coordinates:
                 shp_write.point(pt[1], pt[0])
+
+
+    def __write_pointz(self, shp_geometry, shp_write):
+        for geo in shp_geometry:
+            for pt in geo.coordinates:
+                shp_write.pointz(pt[1], pt[0], pt[2])
 
 
     def __write_multy_patch(self, shp_geometry, shp_write):
@@ -145,6 +163,15 @@ class ShpWriter(object):
 
             elif (main_type == "mesh"):
                 self.__write_multy_patch(shp_geometry, w)
+
+            elif (main_type == "curveZ"):
+                self.__write_curvez(shp_geometry, w)
+
+            elif (main_type == "polygonZ"):
+                self.__write_polygonz(shp_geometry, w)
+
+            elif (main_type == "pointZ"):
+                self.__write_pointz(shp_geometry, w)
 
             # unwrap fields
             for field in shp_field:

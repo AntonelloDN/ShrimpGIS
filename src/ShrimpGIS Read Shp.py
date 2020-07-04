@@ -14,9 +14,9 @@ Supported shapefile types are:
     1) POINT
     2) POLYLINE
     3) POLYGON
-    4) POINTZ (without z values)
-    5) POLYLINEZ (without z values)
-    6) POLYGONZ (without z values)
+    4) POINTZ
+    5) POLYLINEZ
+    6) POLYGONZ
 -
 Remark: Only WGS84 (EPSG:4326) reference system is supported.
 If your shp use another coordinate system you have to reproject it using a GIS software (e.g. QGIS).
@@ -54,9 +54,8 @@ import Rhino
 try:
     user_path = os.getenv("APPDATA")
     sys.path.append(user_path)
-    from shrimp_gis import __version__
+    from shrimp_gis import __version__, Location
     from shrimp_gis.io import ShpReader
-    from shrimp_gis import Location
     from shrimp_gis.io import get_rh_point_from_latlon
     ghenv.Component.Message = __version__
 except ImportError as e:
@@ -79,16 +78,22 @@ def main():
         if (reader.is_shp_file_wgs84(_shp_file)):
             reader.read_shp_file(_shp_file)
             
-            if (reader.level == "partially supported"):
-                ghenv.Component.AddRuntimeMessage(level, "{0} file type is partially supported" \
-                " by shp reader components. Z values are not imported.".format(reader.type_name))
             
             if (reader.level == "not supported"):
                 ghenv.Component.AddRuntimeMessage(level, "I am Sorry, {0} file type is not supported" \
                 " by shp reader components.".format(reader.type_name))
                 return [None]*3
             else:
-                gh_points = get_rh_point_from_latlon(reader.points, location)                
+                gh_points = get_rh_point_from_latlon(reader.points, location)
+                
+                if (reader.level == "supported with z"):
+                    ghenv.Component.AddRuntimeMessage(level, "{0} file type supported." \
+                    " This shp file has Z values.".format(reader.type_name))
+                    
+                    for pts, zs in zip(gh_points, reader.z):
+                        for pt, z in zip(pts, zs):
+                            pt.Z = z - location.altitude
+                
                 geometry, missing_geometry = reader.post_processing(gh_points, _shp_file)
                 field = reader.fields
                 
@@ -101,3 +106,4 @@ def main():
         return [None]*3
 
 field, geometry, missing_geometry = main()
+

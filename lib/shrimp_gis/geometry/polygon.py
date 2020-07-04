@@ -13,6 +13,11 @@ class ShpPolygon(ShpCurve):
         return Rhino.Geometry.Curve.JoinCurves(geometry.DuplicateEdgeCurves(True))
 
     def __init__(self, geometry, number_of_division):
+
+        for srf in geometry.Surfaces:
+            if not srf.IsPlanar():
+                raise ValueError("Surfaces must be planar.")
+        
         ShpGeometry.__init__(self, geometry)
 
         curves = self.__decompose_geometry(geometry)

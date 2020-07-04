@@ -21,7 +21,7 @@ class ShpCurve(ShpGeometry):
             geometry = geometry.ToNurbsCurve()
             points = [pt.Location for pt in geometry.Points]
         else:
-            param = geometry.DivideByCount(number_of_division, True);
+            param = geometry.DivideByCount(number_of_division, True)
             points = [geometry.PointAt(t) for t in param]
             if geometry.IsClosed:
                 points.append(points[0])

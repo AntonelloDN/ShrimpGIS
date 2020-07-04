@@ -10,10 +10,11 @@
 """
 Construct a ShrimpGIS Location.
     Args:
-        name: Name of Location.
-        latitude: Latitude of Location WGS84 [float].
-        longitude: Longitude of Location WGS84 [float].
-        anchor_point: Rhino point to use as anchor point of Location.
+        _name_: Name of Location.
+        _latitude_: Latitude of Location WGS84 [float].
+        _longitude_: Longitude of Location WGS84 [float].
+        _altitude_: Altitude of Location in meter [float]. Use it for shapefile with Z values.
+        _anchor_point_: Rhino point to use as anchor point of Location.
     
     Returns:
         location: ShrimpGIS Location.
@@ -48,6 +49,7 @@ def main():
     if _name_: location.name = _name_
     if _latitude_: location.latitude = _latitude_
     if _longitude_: location.longitude = _longitude_
+    if _altitude_: location.altitude = _altitude_
     if _anchor_point_: location.anchor_point = _anchor_point_
     
     return location

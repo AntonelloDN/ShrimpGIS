@@ -6,11 +6,12 @@ import Rhino
 class Location(object):
     """This class create Envimet Location Attributes (Location Name, Latitude, Longitude)."""
 
-    def __init__(self, name = "ShrimpGIS-Location", latitude = 0, longitude = 0, anchor_point = Rhino.Geometry.Point3d.Origin):
-        self.name = name
+    def __init__(self, name = "ShrimpGIS-Location", latitude = 0, longitude = 0, anchor_point = Rhino.Geometry.Point3d.Origin, altitude = 0):
+        self.altitude = altitude
+        self.anchor_point = anchor_point
         self.__latitude = latitude
         self.__longitude = longitude
-        self.anchor_point = anchor_point
+        self.name = name
 
     @property
     def latitude(self):

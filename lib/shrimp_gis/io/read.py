@@ -17,7 +17,7 @@ class ShpReader(object):
 
     __supportLevel = {
             "supported": (1, 3, 5),
-            "partially supported" : (11, 13, 15),
+            "supported with z" : (11, 13, 15),
             "not supported" : (8, 18, 21, 23, 25, 28, 31)
             }
 
@@ -210,7 +210,7 @@ class ShpReader(object):
         self.level = self.__get_key_value_for_status(self.type, self.__supportLevel)
         self.rhType = self.__get_key_value_for_status(self.type, self.__rhinoType)
 
-        if (self.level == "supported" or self.level == "partially supported"):
+        if (self.level == "supported" or self.level == "supported with z"):
             self.fields = self.__create_fields(sf)
             self.points = self.__get_geometry_coordinates(sf)
             self.parts = self.__get_parts(sf)
@@ -220,8 +220,9 @@ class ShpReader(object):
                 if(not reduce(sum, self.parts)):
                     self.parts = [[0]]*len(self.parts)
 
-            #TODO: Add z dimension for z type
-            #self.z = self.__get_z_values(sf)
+        # flat list of Z-values
+        if self.level == "supported with z":
+            self.z = self.__get_z_values(sf)
 
 
     def post_processing(self, gh_pts, file):

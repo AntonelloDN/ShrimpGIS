@@ -10,14 +10,16 @@ def get_utm_detail_from_location(location):
     return from_latlon(location.latitude, location.longitude)
 
 
-def get_latlon_from_location(pts, location):
+def get_latlon_from_location(pts, location, zvalue=False):
 
     utmx, utmy, zone, letter = get_utm_detail_from_location(location)
-
-    utm_pts = [(pt[0] + utmx + location.anchor_point.X, pt[1] + utmy + location.anchor_point.Y) for pt in pts]
-    latlon_pts = [to_latlon(pt[0], pt[1], zone, letter) for pt in utm_pts]
-
-    return latlon_pts
+    
+    if zvalue:
+        utm_pts = [(pt[0] + utmx + location.anchor_point.X, pt[1] + utmy + location.anchor_point.Y, pt.Z + location.altitude) for pt in pts]
+        return [list(to_latlon(pt[0], pt[1], zone, letter)) + [pt[2]] for pt in utm_pts]
+    else:
+        utm_pts = [(pt[0] + utmx + location.anchor_point.X, pt[1] + utmy + location.anchor_point.Y) for pt in pts]
+        return [to_latlon(pt[0], pt[1], zone, letter) for pt in utm_pts]
 
 
 def get_rh_point_from_latlon(point_group, location):
