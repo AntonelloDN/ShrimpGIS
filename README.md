@@ -24,6 +24,7 @@ You can use it with other plugins, [example](http://htmlpreview.github.com/?http
 * Extraction of fields.
 * Transformation of points, surface/breps, curves into Geojson entities.
 * Transformation of Geojson entities into points, surface/breps, curves.
+* Merge Multiple geojson in to one geojson
 * Write Esri ASCII Raster file.
 ## Limits v.1.0.3:
 * Rhino document has to be in meter
