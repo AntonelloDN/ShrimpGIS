@@ -16,13 +16,16 @@ You can use it with other plugins, [example](http://htmlpreview.github.com/?http
 ## Dependencies:
 * pyshp
 * utm
+* pygeoj
 ## Features:
 * Transformation of points, surface/breps, curves, meshes into Esri shapefile entities.
 * Discretization for curves and surface/breps.
 * Transformation of Esri shapefile entities into points, surface/breps, curves.
 * Extraction of fields.
+* Transformation of points, surface/breps, curves into Geojson entities.
+* Transformation of Geojson entities into points, surface/breps, curves.
 * Write Esri ASCII Raster file.
-## Limits v.1.0.2:
+## Limits v.1.0.3:
 * Rhino document has to be in meter
 * Only WGS84 (EPSG:4326) reference system is supported. I suggest you use a GIS software for reprojection (e.g. [QGIS](https://www.qgis.org/en/site/)).
 * Shapefile read component supports following GIS types:
@@ -32,6 +35,7 @@ You can use it with other plugins, [example](http://htmlpreview.github.com/?http
   * POINTZ
   * POLYLINEZ
   * POLYGONZ
+* Geojson read component supports only 2D FeatureCollection.
 ## Videos:
 [Showcase](https://youtu.be/UY8ezRylcj4)
 ## Contributors(a-z):
