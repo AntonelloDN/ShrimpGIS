@@ -6,6 +6,7 @@ Raster writer. It writes asc files and UTM WGS84 prj files.
 
 from shapefile import TRIANGLE_STRIP
 import shapefile
+import pygeoj
 import Grasshopper
 import os
 import uuid
@@ -60,7 +61,7 @@ class ShpWriter(object):
         return True, main_type
 
 
-    def __field_legth_checking(self, shp_field, shp_geometry):
+    def field_legth_checking(self, shp_field, shp_geometry):
 
         for field in shp_field:
             if len(field.values) != len(shp_geometry):
@@ -68,7 +69,7 @@ class ShpWriter(object):
         return True
 
 
-    def __create_valid_folder(self, folder):
+    def create_valid_folder(self, folder):
         if not os.path.exists(folder):
             try:
                 os.mkdir(folder)
@@ -140,7 +141,7 @@ class ShpWriter(object):
 
         unique_test, main_type = self.__is_unique_type(shp_geometry)
 
-        if (unique_test and self.__field_legth_checking(shp_field, shp_geometry) and self.__create_valid_folder(folder)):
+        if (unique_test and self.field_legth_checking(shp_field, shp_geometry) and self.create_valid_folder(folder)):
 
             full_path = os.path.join(folder, file_name + ".shp")
             w = shapefile.Writer(os.path.join(folder, file_name + ".shp"))
@@ -189,3 +190,160 @@ class ShpWriter(object):
 
         else:
             return False
+
+
+class GeojsonWriter(ShpWriter):
+
+    #TODO: Implement z values. Only 2d for now.
+    def __write_point(self, index, geojson, shp_geometry, shp_field):
+
+        prop = {}
+        geom = {"type":"Point"}
+
+        geom["coordinates"] = [shp_geometry.coordinates[0][1], shp_geometry.coordinates[0][0]]
+
+        for field in shp_field:
+            prop[field.name] = field.values[index]
+        
+        geojson.add_feature ( properties=prop, geometry=geom )
+
+
+    def __write_multi_point(self, index, geojson, shp_geometry, shp_field):
+
+        prop = {}
+        geom = {"type":"MultiPoint"}
+
+        coordinates = []
+        for geo in shp_geometry.geometry:
+            for pt in geo.coordinates:
+                coordinates.append([pt[1], pt[0]])
+        
+        geom["coordinates"] = coordinates
+
+        for field in shp_field:
+            prop[field.name] = field.values[index]
+        
+        geojson.add_feature ( properties=prop, geometry=geom )
+    
+
+    def __write_linestring(self, index, geojson, shp_geometry, shp_field):
+
+        prop = {}
+        geom = {"type":"LineString"}
+
+        geom["coordinates"] = [[pt[1], pt[0]] for pt in shp_geometry.coordinates]
+
+        for field in shp_field:
+            prop[field.name] = field.values[index]
+        
+        geojson.add_feature ( properties=prop, geometry=geom )
+    
+
+    def __write_multi_linestring(self, index, geojson, shp_geometry, shp_field):
+
+        prop = {}
+        geom = {"type":"MultiLineString"}
+
+        coordinates = []
+        for geo in shp_geometry.geometry:
+            coordinates.append([[pt[1], pt[0]] for pt in geo.coordinates])
+
+        geom["coordinates"] = coordinates
+
+        for field in shp_field:
+            prop[field.name] = field.values[index]
+        
+        geojson.add_feature ( properties=prop, geometry=geom )
+
+
+    def __write_polygon(self, index, geojson, shp_geometry, shp_field):
+
+        prop = {}
+        geom = {"type":"Polygon"}
+
+        coordinates = []
+        for geo in shp_geometry.coordinates:
+            coordinates.append([[pt[1], pt[0]] for pt in geo])
+        
+        geom["coordinates"] = coordinates
+
+        for field in shp_field:
+            prop[field.name] = field.values[index]
+        
+        geojson.add_feature ( properties=prop, geometry=geom )
+    
+    
+    def __write_multi_polygon(self, index, geojson, shp_geometry, shp_field):
+
+        prop = {}
+        geom = {"type":"MultiPolygon"}
+
+        coordinates = []
+        for geo in shp_geometry.geometry:
+            curve = []
+            for pts in geo.coordinates:
+                curve.append([[pt[1], pt[0]] for pt in pts])
+            coordinates.append(curve)
+        
+        geom["coordinates"] = coordinates
+
+        for field in shp_field:
+            prop[field.name] = field.values[index]
+        
+        geojson.add_feature ( properties=prop, geometry=geom )
+    
+
+    def write_geojson_file(self, folder, file_name, shp_geometry, shp_field):
+
+        if (len(shp_field) == 0):
+            values = [str(uuid.uuid4()) for i in range(len(shp_geometry))]
+            shp_field = [Field(values, 'UUID', 'C', 40, 0)]
+
+        full_path = os.path.join(folder, file_name + ".json")
+
+        geojson = pygeoj.new()
+
+        if (self.field_legth_checking(shp_field, shp_geometry) and self.create_valid_folder(folder)):
+
+            for i, geometry in enumerate(shp_geometry):
+                if geometry.name == "point":
+                    self.__write_point(i, geojson, geometry, shp_field)
+                elif geometry.name == "multipoint":
+                    self.__write_multi_point(i, geojson, geometry, shp_field)
+                elif geometry.name == "curve":
+                    self.__write_linestring(i, geojson, geometry, shp_field)
+                elif geometry.name == "multicurve":
+                    self.__write_multi_linestring(i, geojson, geometry, shp_field)
+                elif geometry.name == "polygon":
+                    self.__write_polygon(i, geojson, geometry, shp_field)
+                elif geometry.name == "multipolygon":
+                    self.__write_multi_polygon(i, geojson, geometry, shp_field)
+                
+            geojson.add_all_bboxes()
+            geojson.update_bbox()
+            geojson.save(full_path)
+
+            return full_path
+        
+        else:
+            return False
+    
+    @classmethod
+    def merge_geojson(cls, folder, file_name, files):
+
+        geojson = pygeoj.new()
+        for path in files:
+            f = pygeoj.load(path)
+            for feature in f:
+                geojson.add_feature(obj=feature)
+
+        full_path = os.path.join(folder, file_name + ".json")
+
+        geojson.add_all_bboxes()
+        geojson.update_bbox()
+        geojson.save(full_path)
+
+        return full_path
+
+
+        

@@ -7,3 +7,5 @@ from matrix import Matrix
 from pointz import ShpPointZ
 from curvez import ShpCurveZ
 from polygonz import ShpPolygonZ
+# for json only
+from multiGeometry import MultiGeometry

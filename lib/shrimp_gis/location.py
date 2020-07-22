@@ -1,17 +1,28 @@
 # coding=utf-8
 """Shape field. Gismo tag to export."""
 import Rhino
+import io.transformation
 
 
 class Location(object):
     """This class create Envimet Location Attributes (Location Name, Latitude, Longitude)."""
 
     def __init__(self, name = "ShrimpGIS-Location", latitude = 0, longitude = 0, anchor_point = Rhino.Geometry.Point3d.Origin, altitude = 0):
+
         self.altitude = altitude
         self.anchor_point = anchor_point
         self.__latitude = latitude
         self.__longitude = longitude
         self.name = name
+
+
+    def set_utm(self):
+
+        utmx, utmy, zone, letter = io.transformation.get_utm_detail_from_location(self)
+        self.utmx = utmx
+        self.utmy = utmy
+        self.zone = zone
+        self.letter = letter
 
     @property
     def latitude(self):

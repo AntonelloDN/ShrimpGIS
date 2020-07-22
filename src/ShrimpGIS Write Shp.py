@@ -8,29 +8,37 @@
 # @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>
 
 """
-It writes ESRI Shapefiles WGS84.
+Use this component to read shapefiles.
+-
+Supported shapefile types are:
+    1) POINT
+    2) POLYLINE
+    3) POLYGON
+    4) POINTZ
+    5) POLYLINEZ
+    6) POLYGONZ
+-
+Remark: Only WGS84 (EPSG:4326) reference system is supported.
+If your shp use another coordinate system you have to reproject it using a GIS software (e.g. QGIS).
+
     Args:
-        _field_: ShrimpGIS Fields to add to GIS geometries.
-        -
-        If nothing added to this input, it will be created just one column called UUID.
-        _shp_geometry: Geometry to write into shapefile.
-        -
-        Connect a type of following
-        - ShrimpGIS point 
-        - ShrimpGIS curve 
-        - ShrimpGIS polygon 
-        - ShrimpGIS mesh
-        _folder: Path of directory where you want to save a shapefile. For example, "C:\Example".
-        _name_: Name of shapefile which you want to save on your machine. Default name is <GEOTYPE>.
-        run_it_: Set it to True to write shapefile.
-    
+        _shp_file: Complete path with extension of a shapefile. E.g. C:\Example\shapefile.shp
+        _location_: ShrimpGIS Location.
+        run_it_: Set it to true to run component.
     Returns:
         read_me: Message for users.
-        shp_file: Complete path with extension of the shapefile.
+        field: ShrimpGIS Fields attached to GIS geometries.
+        geometry: Imported geometries in Rhino world.
+        -
+        They are arranged in GH tree in "Maintain" mode. Branches of missing geometries are deleted automatically.
+        -------------------:
+        missing_geometry: Some geometries can be not import correctly. Here you can find Id of missing geometries.
+        -
+        Use this output to create Paths or use it as List to clear Field values from missing geometries.
 """
 
-ghenv.Component.Name = "ShrimpGIS Write Shp"
-ghenv.Component.NickName = "shrimp_write_shp"
+ghenv.Component.Name = "ShrimpGIS Read Shp"
+ghenv.Component.NickName = "shrimp_read_shp"
 ghenv.Component.Category = "ShrimpGIS"
 ghenv.Component.SubCategory = "1 || IO"
 try: ghenv.Component.AdditionalHelpFromDocStrings = "1"
@@ -46,35 +54,51 @@ import Rhino
 try:
     user_path = os.getenv("APPDATA")
     sys.path.append(user_path)
-    from shrimp_gis import __version__
-    from shrimp_gis.io import ShpWriter
+    from shrimp_gis import __version__, Location
+    from shrimp_gis.io import ShpReader
+    from shrimp_gis.io import from_nested_lat_lon_to_utm
     ghenv.Component.Message = __version__
 except ImportError as e:
     raise ImportError("\nFailed to import ShrimpGIS: {0}\n\nCheck your 'shrimp_gis' folder in {1}".format(e, os.getenv("APPDATA")))
 ################################################
 
-warning = Grasshopper.Kernel.GH_RuntimeMessageLevel.Warning
 
 def main():
     
-    main_type = _shp_geometry[0].name
+    level = Grasshopper.Kernel.GH_RuntimeMessageLevel.Remark
     
-    name = main_type if _name_ == None else _name_
+    if not _shp_file:
+        print("Connect a compatible shapefile to read.\nThen set run_it to 'True'.")
+        return [None]*3
     
-    if None in _field_: print("There is an invalid field."); return
+    location = Location() if not _location_ else _location_
     
-    if (run_it_):
-        shp_write = ShpWriter()
-        result = shp_write.write_shp_file(_folder, name, _shp_geometry, _field_)
+    if run_it_:
         
-        if result == False:
-                ghenv.Component.AddRuntimeMessage(warning, "Please make sure you are using just one geometry type (e.g. all points) and count of value of fields are equals to geometries count.")
+        reader = ShpReader(_shp_file)
+        
+        if (reader.level == "not supported"):
+            ghenv.Component.AddRuntimeMessage(level, "I am Sorry, {0} file type is not supported" \
+            " by shp reader components.".format(reader.type_name))
+            return [None]*3
         else:
-            return result
+            gh_points = from_nested_lat_lon_to_utm(reader.points, location)
+            
+            if (reader.level == "supported with z"):
+                ghenv.Component.AddRuntimeMessage(level, "{0} file type supported." \
+                " This shp file has Z values.".format(reader.type_name))
+                
+                for pts, zs in zip(gh_points, reader.z):
+                    for pt, z in zip(pts, zs):
+                        pt.Z = z - location.altitude
+            
+            geometry, missing_geometry = reader.get_georeferenced_rhino_geometry(gh_points)
+            field = reader.fields
+            
+            return field, geometry, missing_geometry
+        
+    else:
+        return [None]*3
 
+field, geometry, missing_geometry = main()
 
-shp_file = main() if _shp_geometry and run_it_ and _folder != None else None
-if not shp_file:
-    print("Add shp_geometry and folder.\nThen set run_it to 'True'.")
-else:
-    print("File written.")

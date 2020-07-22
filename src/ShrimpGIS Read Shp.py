@@ -56,7 +56,7 @@ try:
     sys.path.append(user_path)
     from shrimp_gis import __version__, Location
     from shrimp_gis.io import ShpReader
-    from shrimp_gis.io import get_rh_point_from_latlon
+    from shrimp_gis.io import from_nested_lat_lon_to_utm
     ghenv.Component.Message = __version__
 except ImportError as e:
     raise ImportError("\nFailed to import ShrimpGIS: {0}\n\nCheck your 'shrimp_gis' folder in {1}".format(e, os.getenv("APPDATA")))
@@ -71,37 +71,32 @@ def main():
         print("Connect a compatible shapefile to read.\nThen set run_it to 'True'.")
         return [None]*3
     
-    reader = ShpReader()
     location = Location() if not _location_ else _location_
     
     if run_it_:
-        if (reader.is_shp_file_wgs84(_shp_file)):
-            reader.read_shp_file(_shp_file)
-            
-            
-            if (reader.level == "not supported"):
-                ghenv.Component.AddRuntimeMessage(level, "I am Sorry, {0} file type is not supported" \
-                " by shp reader components.".format(reader.type_name))
-                return [None]*3
-            else:
-                gh_points = get_rh_point_from_latlon(reader.points, location)
-                
-                if (reader.level == "supported with z"):
-                    ghenv.Component.AddRuntimeMessage(level, "{0} file type supported." \
-                    " This shp file has Z values.".format(reader.type_name))
-                    
-                    for pts, zs in zip(gh_points, reader.z):
-                        for pt, z in zip(pts, zs):
-                            pt.Z = z - location.altitude
-                
-                geometry, missing_geometry = reader.post_processing(gh_points, _shp_file)
-                field = reader.fields
-                
-                return field, geometry, missing_geometry
-        else:
-            ghenv.Component.AddRuntimeMessage(level, "Only WGS84 (EPSG:4326) is supported." \
-            "Please reproject vectors using a GIS software (e.g. QGIS) before importing it.")
+        
+        reader = ShpReader(_shp_file)
+        
+        if (reader.level == "not supported"):
+            ghenv.Component.AddRuntimeMessage(level, "I am Sorry, {0} file type is not supported" \
+            " by shp reader components.".format(reader.type_name))
             return [None]*3
+        else:
+            gh_points = from_nested_lat_lon_to_utm(reader.points, location)
+            
+            if (reader.level == "supported with z"):
+                ghenv.Component.AddRuntimeMessage(level, "{0} file type supported." \
+                " This shp file has Z values.".format(reader.type_name))
+                
+                for pts, zs in zip(gh_points, reader.z):
+                    for pt, z in zip(pts, zs):
+                        pt.Z = z - location.altitude
+            
+            geometry, missing_geometry = reader.get_georeferenced_rhino_geometry(gh_points)
+            field = reader.fields
+            
+            return field, geometry, missing_geometry
+        
     else:
         return [None]*3
 
