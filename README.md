@@ -35,7 +35,7 @@ You can use it with other plugins, [example](http://htmlpreview.github.com/?http
   * POINTZ
   * POLYLINEZ
   * POLYGONZ
-* Geojson read component supports only 2D FeatureCollection.
+* Geojson components support only 2D FeatureCollection.
 ## Videos:
 [Showcase](https://youtu.be/UY8ezRylcj4)
 ## Contributors(a-z):
