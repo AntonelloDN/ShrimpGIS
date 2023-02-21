@@ -1,13 +1,11 @@
 from error import OutOfRangeError
 
-# For most use cases in this module, numpy is indistinguishable
-# from math, except it also works on numpy arrays
-try:
-    import numpy as mathlib
-    use_numpy = True
-except ImportError:
-    import math as mathlib
-    use_numpy = False
+# When UTM (which can optionally use numpy == 1.16.6) is used inside ShrimpGIS, 
+# numpy may well be "indistinguishable" from math, but it is not distinguishable
+# from later versions of numpy, e.g. that installed by LadyBug Tools.  JP
+
+import math as mathlib
+use_numpy = False
 
 __all__ = ['to_latlon', 'from_latlon']
 
