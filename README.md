@@ -2,7 +2,11 @@
 ![Logo](https://github.com/AntonelloDN/ShrimpGIS/blob/master/resources/shrimp_gis_logo.png)
 A basic plugin for Grasshopper to read and write shapefile. Read more on [Wiki](https://github.com/AntonelloDN/ShrimpGIS/wiki) pages.
 You can use it with other plugins, [example](https://antonellodn.github.io/ShrimpGIS/)
+
 ![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/ShrimpGIS_milan_top.png)
+
+[![Github All Releases](https://img.shields.io/github/downloads/AntonelloDN/ShrimpGIS/total.svg?color=white&label=release%20downloads)]()
+
 ### Easy to use!
 ![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/shrimp_gis.gif)
 ![Alt Text](https://github.com/AntonelloDN/ShrimpGIS/blob/master/examples/shrimp_gis_mesh.gif)
