@@ -1,0 +1,25 @@
+name: GITHUB PAGE EXAMPLE
+
+on:
+  push:
+    branches: [ documentation ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - name: Checkout master branch
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/documentation' }}
+        with:
+          personal_token: ${{ secrets.PER_TOKEN }}
+          publish_dir: ./resources/lb_shrimpgis_threejs_qgis
