@@ -1,0 +1,18 @@
+{
+    "plugins": [
+        "@semantic-release/commit-analyzer",
+        "@semantic-release/release-notes-generator",
+        [
+            "@semantic-release/github",
+            {
+                "assets": [
+                    {
+                        "path": "shrimp_gis.zip",
+                        "name": "shrimp_gis-${nextRelease.version}.zip",
+                        "label": "shrimp_gis-${nextRelease.version}.zip"
+                    }
+                ]
+            }
+        ]
+    ]
+}

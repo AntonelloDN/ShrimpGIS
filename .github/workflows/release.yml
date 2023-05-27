@@ -1,0 +1,47 @@
+name: CD
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - '**/README.txt'
+      - '**/README.md'
+    
+  pull_request:
+    branches: [ master ]
+    paths-ignore:
+      - '**/README.txt'
+      - '**/README.md'
+
+jobs:
+  build:
+    name: Build and release Morpho
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout master branch
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          submodules: true
+
+      - name: zip folder
+        run: |
+          echo "New folder"
+          New-Item .\deploy -Type Directory
+          echo "Copy folders and files"
+          Copy-Item -Path (".\examples", ".\user_objects", ".\lib", ".\LICENSE", "README.txt", ".\install_lib.gh") -Destination .\deploy -Recurse
+          echo "Create zip file"
+          Compress-Archive -Path .\deploy\* -DestinationPath shrimp_gis.zip
+          echo "Remove deploy"
+          Remove-Item -LiteralPath .\deploy -Force -Recurse
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Semantic release
+        uses: cycjimmy/semantic-release-action@v3
+        id: semantic
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
